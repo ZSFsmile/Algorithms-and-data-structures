@@ -1,0 +1,223 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<iostream>
+#include<stack>
+#include<queue>
+using namespace std;
+typedef struct BiNode
+{
+	char ch;
+	struct BiNode* lchild;
+	struct BiNode* rchild;
+}BiNode;
+
+void showtree(BiNode* root)
+{
+	if (NULL == root)
+		return;
+	printf("%c ", root->ch);//递归前序遍历
+	showtree(root->lchild);
+	showtree(root->rchild);
+
+	//showtree(root->lchild);
+	//printf("%c ", root->ch);//递归中序遍历
+	//showtree(root->rchild);
+
+	//showtree(root->lchild);
+	//showtree(root->rchild);
+	//printf("%c ", root->ch);//递归后序遍历
+	return;
+}
+
+void leafNum(BiNode* root,int* p)//叶子数
+{
+	if (NULL == root)
+		return;
+	if (root->lchild == NULL && root->rchild == NULL)
+	{
+		(*p)++;
+		return;
+	}
+	leafNum(root->lchild, p);
+	leafNum(root->rchild, p);
+	return;
+}
+
+int treeHeigh(BiNode* root)//树的高度
+{
+	if (root == NULL)
+	{
+		return 0;
+	}
+	int lheigh = treeHeigh(root->lchild);
+	int rheigh = treeHeigh(root->rchild);
+	int heigh = lheigh > rheigh ? lheigh + 1 : rheigh + 1;
+	return heigh;
+}
+
+BiNode* treeCopy(BiNode* root)//树的复制
+{
+	if (NULL == root)
+		return NULL;
+	BiNode* lchild = treeCopy(root->lchild);
+	BiNode* rchild = treeCopy(root->rchild);
+	BiNode* newnode = (BiNode*)malloc(sizeof(BiNode));
+	if (newnode == NULL)
+		return NULL;
+	newnode->lchild = lchild;
+	newnode->rchild = rchild;
+	newnode->ch = root->ch;
+	return newnode;
+}
+
+void freetree(BiNode* root)//树的释放
+{
+	if (root == NULL)
+		return;
+	free(root->lchild);
+	free(root->rchild);
+	free(root);
+	return;
+}
+
+void preOrder(BiNode* root)//非递归前序遍历
+{
+	if (root == NULL)
+		return;
+	stack<BiNode*>st;
+	BiNode* p = root;
+	while (p != NULL || !st.empty())
+	{
+		if (p != NULL)
+		{
+			st.push(p);
+			printf("%c ", p->ch);//中
+			p = p->lchild;//左
+		}
+		else
+		{
+			p = st.top();
+			st.pop();
+			p = p->rchild;//右
+		}
+	}
+	return;
+}
+
+void midOrder(BiNode* root)//非递归中序遍历
+{
+	if (root == NULL)
+		return;
+	stack<BiNode*>st;
+	BiNode* p = root;
+	while (p != NULL || !st.empty())
+	{
+		if (p != NULL)
+		{
+			st.push(p);
+			p = p->lchild;//左
+		}
+		else
+		{
+			p = st.top();
+			printf("%c ", p->ch);//中
+			st.pop();
+			p = p->rchild;//右
+		}
+	}
+	return;
+}
+
+void postOrder(BiNode* root)//非递归后序遍历
+{
+	if (root == NULL)
+		return;
+	stack<BiNode*>st1, st2;
+	BiNode* p = root;
+	while (p != NULL || !st1.empty())
+	{
+		if (p != NULL)
+		{
+			st1.push(p);
+			st2.push(p);
+			p = p->rchild;
+		}
+		else
+		{
+			p = st1.top();
+			st1.pop();
+			p = p->lchild;
+		}
+	}
+	while (!st2.empty())
+	{
+		printf("%c ", st2.top()->ch);
+		st2.pop();
+	}
+	return;
+}
+
+void levelOrder(BiNode* root)//层次遍历
+{
+	if (root == NULL)
+		return;
+	queue<BiNode*>qu;
+	BiNode* p = root;
+	qu.push(p);
+	while(!qu.empty())
+	{
+		printf("%c ", qu.front()->ch);
+		if (qu.front()->lchild != NULL)
+			qu.push(qu.front()->lchild);
+		if (qu.front()->rchild != NULL)
+			qu.push(qu.front()->rchild);
+		qu.pop();
+	}
+}
+void test06()
+{
+	BiNode nodeA = { 'A',NULL,NULL };
+	BiNode nodeB = { 'B',NULL,NULL };
+	BiNode nodeC = { 'C',NULL,NULL };
+	BiNode nodeD = { 'D',NULL,NULL };
+	BiNode nodeE = { 'E',NULL,NULL };
+	BiNode nodeF = { 'F',NULL,NULL };
+	BiNode nodeG = { 'G',NULL,NULL };
+	BiNode nodeH = { 'H',NULL,NULL };
+	nodeA.lchild = &nodeB;
+	nodeA.rchild = &nodeF;
+	nodeB.rchild = &nodeC;
+	nodeC.lchild = &nodeD;
+	nodeC.rchild = &nodeE;
+	nodeF.rchild = &nodeG;
+	nodeG.lchild = &nodeH;
+	showtree(&nodeA);
+	int num = 0;
+	leafNum(&nodeA,&num);
+	printf("\n叶子数=%d\n", num);
+	int heigh = treeHeigh(&nodeA);
+	printf("树高=%d\n", heigh);
+	BiNode* newnode = treeCopy(&nodeA);
+	printf("递归遍历 ");
+	showtree(newnode);
+	printf("\n");
+	printf("非递归前序遍历 ");
+	preOrder(newnode);
+	printf("\n");
+	printf("非递归中序遍历 ");
+	midOrder(newnode);
+	printf("\n");
+	printf("非递归后序遍历 ");
+	postOrder(newnode);
+	printf("\n");
+	printf("非递归层次遍历 ");
+	levelOrder(newnode);
+
+	freetree(newnode);
+}
+int main()
+{
+	test06();
+	return 0;
+}
