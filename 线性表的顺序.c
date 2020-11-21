@@ -1,104 +1,125 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include<string.h>
 #include<stdio.h>
+#include<string.h>
 #include<stdlib.h>
-
+#define maxsize 100
+#define elemtype int
 typedef struct sqlist
 {
-	void** data;//void*指针可以指向所有类型
-	int len;
-	int size;
+    elemtype* data;
+    int len;
+    int size;
 }sqlist;
-
-sqlist* sqlistInit(int size)//线性表分配空间并初始化
+sqlist* sqlistInit()
 {
-	if (size <= 0)
-		return NULL;
-	sqlist* list = (sqlist*)malloc(sizeof(sqlist));
-	if (NULL == list)
-		return NULL;
-	list->size = size;
-	list->data = (void**)malloc(sizeof(void*) * list->size);
-	list->len = 0;
-	return list;
-}
-void sqlistInsert(sqlist* list, int index, void* data)//顺序表插入,index是下标
-{
-	if (NULL == list)
-		return;
-	if (NULL == data)
-		return;
-	if (index<0 || index>list->len)//return;
-	{
-		index = list->len;//如果插入位置不符，就将其放在最后
-	}
-	if (list->len >= list->size)
-	{
-		void** newdata = (void**)malloc(sizeof(void*) * list->size * 2);
-		if (NULL == newdata)
-			return;
-		memcpy(newdata, list->data, sizeof(void*) * list->size);
-		free(list->data);
-		list->data = newdata;
-		list->size *= 2;
-	}
-	for (int i = list->len - 1; i >= index; --i)
-	{
-		list->data[i + 1] = list->data[i];
-	}
-	list->data[index] = data;
-	list->len++;
-	return;
+    sqlist* list = (sqlist*)malloc(sizeof(sqlist));
+    if (list == NULL)
+        return NULL;
+    list->len = 0;
+    list->size = maxsize;
+    list->data = (elemtype*)malloc(sizeof(elemtype) * maxsize);
+    if (list->data == NULL)
+        return NULL;
+    return list;
 }
 
-
-//sqlist* mergeList(sqlist* a, sqlist* b)//两个有序数组归并成一个数组
-
-
-void sqlistDelByIndex(sqlist* list, int index)//按位置删除，删除数组下标index元素
+void sqlistInsert(sqlist* list, int index, elemtype data)
 {
-	if (NULL == list)
-		return;
-	if (index<0 || index>list->len - 1)
-		return;
-	for (int i = index; i < list->len - 1; i++)
-	{
-		list->data[i] = list->data[i + 1];
-	}
-	list->len--;
-	return;
+    if (list == NULL)
+        return;
+    if (index > list->len || index < 0)
+        return;
+    if (list->len >= list->size)
+    {
+        //list->size*=2;
+        //list=(sqlist*)realloc(list,list->size);
+        elemtype* newdata = (elemtype*)malloc(sizeof(elemtype) * list->size * 2);
+        if (newdata == NULL)
+            return;
+        memcpy(newdata, list->data, sizeof(elemtype) * list->size);
+        free(list->data);
+        list->data = newdata;
+        list->size *= 2;
 
+    }
+    for (int i = list->len - 1; i >= index; i--)
+    {
+        list->data[i + 1] = list->data[i];
+    }
+    list->data[index] = data;
+    list->len++;
+    return;
 }
 
-
-void sqlistDestory(sqlist* list)//销毁顺序表
+void sqlistDel(sqlist* list, int index)
 {
-	if (NULL == list)
-		return;
-	if (list->data != NULL)
-	{
-		free(list->data);
-		list->data = NULL;
-	}
-	free(list);
-	list = NULL;
+    if (list == NULL)
+        return;
+    if (index > list->len - 1 || index < 0)
+        return;
+    for (int i = index + 1; i < list->len; i++)
+    {
+        list->data[i - 1] = list->data[i];
+    }
+    list->len--;
+    return;
 }
 
-void test01()
+void sqlistFree(sqlist* list)
 {
-	sqlist* list = sqlistInit(100);
-	int arr01[10] = { 0 };
-	for (int i = 0; i < 10; ++i)
-	{
-		scanf("%d", &arr01[i]);
-		sqlistInsert(list, 100, &arr01[i]);
-	}
-	for (int i = 0; i < 10; ++i)
-		printf("%d ", *(int*)(list->data[i]));
-	return;
+    if (list == NULL)
+        return;
+    if (list->data != NULL)
+    {
+        free(list->data);
+        list->data = NULL;
+    }
+    free(list);
+    list = NULL;
+    return;
+}
+
+void sqlistPrint(sqlist* list)
+{
+    if (list == NULL)
+        return;
+    for (int i = 0; i < list->len; ++i)
+    {
+        printf("%d ", list->data[i]);
+    }
+    printf("\n");
+    return;
+}
+
+void test()
+{
+    int n;
+    int index, data;
+    sqlist* list = sqlistInit();
+    printf("请输入顺序表元素的个数:\n");
+    scanf("%d", &n);
+    printf("请输入顺序表各元素的值,以空格为间隔:\n");
+    for (int i = 0; i < n; ++i)
+    {
+        scanf("%d", &data);
+        sqlistInsert(list, i, data);
+    }
+    printf("请输入要插入元素的位置及元素值,以空格为间隔:\n");
+    scanf("%d %d", &index, &data);
+    sqlistInsert(list, index - 1, data);
+    printf("插入后的元素表为:\n");
+    sqlistPrint(list);
+    printf("请输入要删除元素的位置:\n");
+    scanf("%d", &index);
+    printf("所删除的元素为: %d\n", list->data[index - 1]);
+    sqlistDel(list, index - 1);
+    printf("删除后的顺序表为:\n");
+    sqlistPrint(list);
+    sqlistFree(list);
+    printf("1904010828 张帅峰");
 }
 int main()
 {
-	test01();
-	return 0;
-} 
+    test();
+    return 0;
+}
