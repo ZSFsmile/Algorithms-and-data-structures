@@ -1,117 +1,175 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include<string.h>
 #include<stdio.h>
+#include<string.h>
 #include<stdlib.h>
-
+#define elemtype int
 typedef struct linknode
 {
-	void* data;
-	struct linknode* next;
+    elemtype data;
+    struct linknode* next;
 }linknode;
 typedef struct linklist
 {
-	linknode head;//链表头结点
-	int size;
-}linklist;//linklist不是头结点
-
-linklist* linklistInit()//初始化
+    int len;
+    linknode head;
+}linklist;
+linklist* linklistInit()
 {
-	linklist* list = (linklist*)malloc(sizeof(linklist));
-	if (NULL == list)
-		return NULL;
-	list->head.next = NULL;
-	list->size = 0;
-	return list;
+    linklist* list = (linklist*)malloc(sizeof(linklist));
+    if (list == NULL)
+        return NULL;
+    list->head.next = NULL;
+    list->len = 0;
+    return list;
 }
-void linklistInsert(linklist* list, int index, void* data)//下标index前插入
+void linklistInsertHead(linklist* list, elemtype data)//头插法
 {
-	if (NULL == list)
-		return;
-	if (NULL == data)
-		return;
-	if (index<0 || index>list->size)
-		index = list->size;
-	linknode* cnt = &(list->head);
-	for (int i = 0; i < index; ++i)
-		cnt = cnt->next;
-	linknode* newnode = (linknode*)malloc(sizeof(linknode));
-	if (NULL == newnode)
-		return;
-	newnode->data = data;
-	newnode->next = NULL;
-	newnode->next = cnt->next;
-	cnt->next = newnode;
-	list->size++;
+
+    if (list == NULL)
+        return;
+    linknode* pnode = (linknode*)malloc(sizeof(linknode));
+    if (pnode == NULL)
+        return;
+    pnode->data = data;
+    pnode->next = NULL;
+    linknode* phead = &list->head;
+    pnode->next = phead->next;
+    phead->next = pnode;
+    list->len++;
+    return;
 }
 
-void linklistDelByIndex(linklist* list, int index)//按位置删除，删除下标为index的节点
+void linklistInsertMid(linklist* list, elemtype insertdata, elemtype data)
 {
-	if (NULL == list)
-		return;
-	if (index<0 || index>list->size - 1)
-		return;
-	linknode* node = &list->head;
-	for (int i = 0; i < index; ++i)
-	{
-		node = node->next;
-	}
-	linknode* pDel = node->next;
-	node->next = pDel->next;
-	free(pDel);
-	pDel = NULL;
-	list->size--;
+    if (list == NULL)
+        return;
+    linknode* pnode = (linknode*)malloc(sizeof(linknode));
+    if (pnode == NULL)
+        return;
+    pnode->data = data;
+    pnode->next = NULL;
+    linknode* phead = &list->head;
+    linknode* p = phead->next;
+    while (p != NULL)
+    {
+        if (p->data == insertdata)
+        {
+            pnode->next = p->next;
+            p->next = pnode;
+            list->len++;
+            break;
+        }
+        p = p->next;
+    }
+    return;
 }
 
-//void linklistDelByVal(linklist* list, void* data)//按值删除，删除数据域为data的节点
-//{
-//	if (NULL == list)
-//		return;
-//
-//}
+void linklistDel(linklist* list, elemtype data)//按值删除
+{
+    if (list == NULL)
+        return;
+    linknode* phead = &list->head;
+    linknode* p = phead;
+    while (p->next != NULL)
+    {
+        if (p->next->data == data)
+        {
+            p->next = p->next->next;
+            list->len--;
+            break;
+        }
+        p = p->next;
+    }
+    return;
+}
+void linklistChange(linklist* list, elemtype changedata, elemtype data)
+{
+    if (list == NULL)
+        return;
+    linknode* phead = &list->head;
+    linknode* p = phead->next;
+    while (p != NULL)
+    {
+        if (p->data == changedata)
+        {
+            p->data = data;
+            break;
+        }
+        p = p->next;
+    }
+    return;
+}
+void linklistPrint(linklist* list)
+{
+    linknode* phead = &list->head;
+    linknode* p = phead->next;
+    while (p != NULL)
+    {
+        if (p != phead->next)
+            printf("->");
+        printf("%d", (int)p->data);
+        p = p->next;
+    }
+    printf("\n");
+    return;
+}
+void linklistClear(linklist* list)
+{
+    if (list == NULL)
+        return;
+    linknode* phead = &list->head;
+    linknode* pnode = phead->next;
+    while (pnode)
+    {
+        linknode* clearnode = pnode;
+        pnode = pnode->next;
+        free(clearnode);
+        clearnode = NULL;
+    }
+    list->len = 0;
+    list->head.next = NULL;
+    return;
+}
+void linklistDes(linklist* list)
+{
+    if (list == NULL)
+        return;
+    linklistClear(list);
+    free(list);
+    list = NULL;
+    return;
+}
 
-void linklistClear(linklist* list)//清空链表
-{
-	if (NULL == list)
-		return;
-	linknode* nextnode = &list->head;
-	nextnode = nextnode->next;
-	while (nextnode)
-	{
-		linknode* clearnode = nextnode;
-		nextnode = nextnode->next;
-		free(clearnode);
-		clearnode = NULL;
-	}
-	list->head.next = NULL;
-	list->size = 0;
-	return;
-}
-void linklistDestory(linklist* list)//销毁链表
-{
-	if (NULL == list)
-		return;
-	linklistClear(list);
-	free(list);
-	list = NULL;
-	return;
-}
 void test02()
 {
-	linklist* list = linklistInit();
-	int arr02[10] = { 0 };
-	for (int i = 0; i < 4; ++i)
-		scanf("%d", &arr02[i]);
-	for (int i = 0; i < 4; ++i)
-		linklistInsert(list, 10, &arr02[i]);
-	linknode* test02 = &list->head;
-	for (int i = 0; i < 4; ++i)
-	{
-		test02 = test02->next;
-		printf("%d ", *(int*)test02->data);
-	}
+    int x, data, insertdata, changedata;
+    linklist* list = linklistInit();
+    printf("输入多个结点数值,以空格为间隔,以0为终止符\n");
+    while (scanf("%d", &x) != EOF)
+    {
+        if (x == 0)
+            break;
+        linklistInsertHead(list, x);
+    }
+    linklistPrint(list);
+    printf("请输入要删除的元素:");
+    scanf("%d", &data);
+    linklistDel(list, data);
+    linklistPrint(list);
+    printf("请输入插入位置的元素值(将待插元素插入到它的后面):");
+    scanf("%d", &insertdata);
+    printf("请输入待插元素值:");
+    scanf("%d", &data);
+    linklistInsertMid(list, insertdata, data);
+    linklistPrint(list);
+    printf("请输入要修改前,后的元素值:");
+    scanf("%d %d", &changedata, &data);
+    linklistChange(list, changedata, data);
+    linklistPrint(list);
+
+    linklistDes(list);
 }
 int main()
 {
-	test02();
-	return 0;
+    test02();
+    return 0;
 }
