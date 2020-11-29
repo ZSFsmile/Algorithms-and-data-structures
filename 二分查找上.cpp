@@ -1,5 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
+/**最简单的二分查找，有序数组不含重复元素**/
+
 /******二分查找while版
 int bsearch(int arr[],int n,int value)
 {
