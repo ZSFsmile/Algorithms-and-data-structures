@@ -1,5 +1,5 @@
 #include<bits/stdc++.h>
-using namespace std;'
+using namespace std;
 /***二分法重复元素***/
 
 /** 查找第一个值等于给定值的元素**/
@@ -15,10 +15,10 @@ int bsearch1(int arr[],int n,int value)
             r=mid-1;
         if(arr[mid]==value)
         {
-            if((mid==0)||(a[mid-1]!=value))
+            if((mid==0)||(arr[mid-1]!=value))
                 return mid;
             else
-                high=mid-1;
+                r=mid-1;
         }
     }
     return -1;
@@ -52,9 +52,9 @@ int bsearch3(int arr[],int n,int value)
     while(l<=r)
     {
         int mid=l+((r-l)>>1);
-        if(a[mid]>=value)
+        if(arr[mid]>=value)
         {
-            if((mid==0)||(a[mid-1]<value))
+            if((mid==0)||(arr[mid-1]<value))
                 return mid;
             else
                 r=mid-1;
@@ -66,21 +66,21 @@ int bsearch3(int arr[],int n,int value)
 }
 /** 查找最后一个小于等于给定值的元素，
 或者说小于等于给定值的元素最大一个**/
-int bsearch3(int arr[],int n,int value)
+int bsearch4(int arr[],int n,int value)
 {
     int l=0,r=n-1;
     while(l<=r)
     {
         int mid=l+((r-l)>>1);
-        if(a[mid]<=value)
+        if(arr[mid]<=value)
         {
-            if((mid==n-1)||(a[mid+1]>value))
+            if((mid==n-1)||(arr[mid+1]>value))
                 return mid;
             else
                 l=mid+1;
         }
         else
-            h=mid-1;
+            r=mid-1;
     }
     return -1;
 }
