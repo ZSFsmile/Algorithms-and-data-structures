@@ -65,13 +65,11 @@ void BiTreeCreat3(BiNode** root,elemtype data[],int len,int index)
 	return;
 }
 /*用括号表示法创建二叉树*/
-void BiTreeCreat(BiNode** proot,elemtype str[])
+void BiTreeCreat(BiNode** proot,elemtype str[],int len)
 {
-	
+	BiNode* st[105];
 	int top=0;
 	int flag=0;
-	BiNode* st[105];//根节点栈，栈顶元素是当前的根节点
-	int len=strlen(str);
 	(*proot)->data=str[0];
 	BiNode* node=(*proot);
 	for(int i=1;i<len;++i)
@@ -82,24 +80,29 @@ void BiTreeCreat(BiNode** proot,elemtype str[])
 				st[top++]=node;
 				flag=1;
 				break;
-			case')':
-				--top;
-				break;
 			case',':
 				flag=2;
+				break;
+			case')':
+				--top;
 				break;
 			default:
 				node=BiNodeInit();
 				node->data=str[i];
 				if(flag==1)
+				{
 					st[top-1]->lchild=node;
+				}
 				if(flag==2)
-					st[top-1]->rchild=node;	
-				break;
+				{
+					st[top-1]->rchild=node;
+				}
+		        break;
 		}
+		
 	}
 	return;
-} 
+}
 
 void showtree(BiNode* root)
 {
