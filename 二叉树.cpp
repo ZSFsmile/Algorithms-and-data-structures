@@ -53,6 +53,18 @@ void BiTreeCreat2(BiNode** proot)
 	return;
 }
 
+/*根据下标创建完全二叉树*/ 
+void BiTreeCreat3(BiNode** root,elemtype data[],int len,int index)
+{
+	if(index>len-1)
+	 	return;
+	(*root)=BiNodeInit();
+	(*root)->data=data[index];
+	BiTreeCreat(&(*root)->lchild,data,len,index*2);
+	BiTreeCreat(&(*root)->rchild,data,len,index*2+1);
+	return;
+}
+
 
 void showtree(BiNode* root)
 {
