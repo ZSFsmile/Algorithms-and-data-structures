@@ -4,29 +4,71 @@
 #include<iostream>
 #include<stack>
 #include<queue>
+#define elemtype char
 using namespace std;
 typedef struct BiNode
 {
-	char ch;
+	elemtype data;
 	struct BiNode* lchild;
 	struct BiNode* rchild;
 }BiNode;
+
+BiNode* BiNodeInit()//结点初始化 
+{
+	BiNode* root=(BiNode*)malloc(sizeof(BiNode));
+	if(root==NULL)
+		return NULL;
+	root->lchild=NULL;
+	root->rchild=NULL;
+	return root;
+}
+
+/*创建二叉树两种方法 */
+/* 已知一个数组创建元素  */
+int index=0; 
+void BiTreeCreat1(BiNode** root,elemtype data[])
+{
+	elemtype value=data[index++];
+	if(value=='#')
+		return;
+	(*root)=BiNodeInit();
+	(*root)->data=value;
+	BiTreeCreat1(&(*root)->lchild,data);
+	BiTreeCreat1(&(*root)->rchild,data);
+	return;
+}
+
+
+/*先序创建二叉树*/
+void BiTreeCreat2(BiNode** proot)
+{
+	elemtype value;
+	cin >> value;
+	if (value == '#')
+		return;
+	(*proot) = BiNodeInit();
+	(*proot)->data = value;
+	BiTreeCreat2(&(*proot)->lchild);
+	BiTreeCreat2(&(*proot)->rchild);
+	return;
+}
+
 
 void showtree(BiNode* root)
 {
 	if (NULL == root)
 		return;
-	printf("%c ", root->ch);//递归前序遍历
+	printf("%c ", root->data);//递归前序遍历
 	showtree(root->lchild);
 	showtree(root->rchild);
 
 	//showtree(root->lchild);
-	//printf("%c ", root->ch);//递归中序遍历
+	//printf("%c ", root->data);//递归中序遍历
 	//showtree(root->rchild);
 
 	//showtree(root->lchild);
 	//showtree(root->rchild);
-	//printf("%c ", root->ch);//递归后序遍历
+	//printf("%c ", root->data);//递归后序遍历
 	return;
 }
 
@@ -67,7 +109,7 @@ BiNode* treeCopy(BiNode* root)//树的复制
 		return NULL;
 	newnode->lchild = lchild;
 	newnode->rchild = rchild;
-	newnode->ch = root->ch;
+	newnode->data = root->data;
 	return newnode;
 }
 
@@ -92,7 +134,7 @@ void preOrder(BiNode* root)//非递归前序遍历
 		if (p != NULL)
 		{
 			st.push(p);
-			printf("%c ", p->ch);//中
+			printf("%c ", p->data);//中
 			p = p->lchild;//左
 		}
 		else
@@ -121,7 +163,7 @@ void midOrder(BiNode* root)//非递归中序遍历
 		else
 		{
 			p = st.top();
-			printf("%c ", p->ch);//中
+			printf("%c ", p->data);//中
 			st.pop();
 			p = p->rchild;//右
 		}
@@ -152,7 +194,7 @@ void postOrder(BiNode* root)//非递归后序遍历
 	}
 	while (!st2.empty())
 	{
-		printf("%c ", st2.top()->ch);
+		printf("%c ", st2.top()->data);
 		st2.pop();
 	}
 	return;
@@ -167,7 +209,7 @@ void levelOrder(BiNode* root)//层次遍历
 	qu.push(p);
 	while(!qu.empty())
 	{
-		printf("%c ", qu.front()->ch);
+		printf("%c ", qu.front()->data);
 		if (qu.front()->lchild != NULL)
 			qu.push(qu.front()->lchild);
 		if (qu.front()->rchild != NULL)
@@ -177,28 +219,17 @@ void levelOrder(BiNode* root)//层次遍历
 }
 void test06()
 {
-	BiNode nodeA = { 'A',NULL,NULL };
-	BiNode nodeB = { 'B',NULL,NULL };
-	BiNode nodeC = { 'C',NULL,NULL };
-	BiNode nodeD = { 'D',NULL,NULL };
-	BiNode nodeE = { 'E',NULL,NULL };
-	BiNode nodeF = { 'F',NULL,NULL };
-	BiNode nodeG = { 'G',NULL,NULL };
-	BiNode nodeH = { 'H',NULL,NULL };
-	nodeA.lchild = &nodeB;
-	nodeA.rchild = &nodeF;
-	nodeB.rchild = &nodeC;
-	nodeC.lchild = &nodeD;
-	nodeC.rchild = &nodeE;
-	nodeF.rchild = &nodeG;
-	nodeG.lchild = &nodeH;
-	showtree(&nodeA);
+	
+	BiNode* root=BiNodeInit();
+	elemtype data[15] = { 'A','B','D','#','#','E','#','#','C','F','#','#','G','#','#' };
+	BiTreeCreat1(&root,data);
+	showtree(root);
 	int num = 0;
-	leafNum(&nodeA,&num);
+	leafNum(root,&num);
 	printf("\n叶子数=%d\n", num);
-	int heigh = treeHeigh(&nodeA);
+	int heigh = treeHeigh(root);
 	printf("树高=%d\n", heigh);
-	BiNode* newnode = treeCopy(&nodeA);
+	BiNode* newnode = treeCopy(root);
 	printf("递归遍历 ");
 	showtree(newnode);
 	printf("\n");
