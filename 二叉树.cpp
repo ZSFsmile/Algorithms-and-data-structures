@@ -65,7 +65,7 @@ void BiTreeCreat3(BiNode** root,elemtype data[],int len,int index)
 	return;
 }
 /*用括号表示法创建二叉树*/
-void BiTreeCreat(BiNode** proot,elemtype str[],int len)
+void BiTreeCreat(BiNode** proot,const elemtype str[],int len)
 {
 	BiNode* st[105];
 	int top=0;
@@ -100,6 +100,26 @@ void BiTreeCreat(BiNode** proot,elemtype str[],int len)
 		        break;
 		}
 		
+	}
+	return;
+}
+/*括号表示法打印二叉树*/
+void BiTreePrint(BiNode* root)
+{
+	if(root==NULL)
+		return;
+	printf("%c",root->data);
+	if(root->lchild!=NULL||root->rchild!=NULL)
+	{
+		printf("(");
+		if(root->lchild!=NULL)
+			BiTreePrint(root->lchild);
+		if(root->rchild!=NULL)
+		{
+			printf(",");
+			BiTreePrint(root->rchild);
+		}
+		printf(")");	
 	}
 	return;
 }
