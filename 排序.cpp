@@ -55,6 +55,7 @@ void insertSort(int arr[],int len)//插入排序
     }
     return;
 }
+
 void quickSort(int arr[],int l,int r)//快速排序
 {
     if(l>=r)
@@ -74,6 +75,17 @@ void quickSort(int arr[],int l,int r)//快速排序
     quickSort(arr,i+1,r);
     return ;
 }
+
+void MergeSort(int arr[],int l,int r) //归并排序
+{
+	if(l == r) return;
+	int mid((l+r)>>1);
+	MergeSort(arr,l,mid);
+	MergeSort(arr,mid+1,r);
+	inplace_merge(arr+l,arr+mid+1,arr+r+1);
+    return ;
+}
+
 int main()
 {
     int arr[1005];
