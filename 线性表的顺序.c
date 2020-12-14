@@ -116,7 +116,6 @@ void test()
     printf("删除后的顺序表为:\n");
     sqlistPrint(list);
     sqlistFree(list);
-    printf("1904010828 张帅峰");
 }
 int main()
 {
