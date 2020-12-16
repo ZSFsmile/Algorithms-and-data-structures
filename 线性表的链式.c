@@ -63,6 +63,27 @@ void linklistInsertMid(linklist* list, elemtype insertdata, elemtype data)
     return;
 }
 
+void linklistInsertTail(linklist* list, elemtype data)//尾插法
+{
+
+    if (list == NULL)
+        return;
+    linknode* pnode = (linknode*)malloc(sizeof(linknode));
+    if (pnode == NULL)
+        return;
+    pnode->data = data;
+    pnode->next = NULL;
+    linknode* p = &list->head;
+    while(p->next!=NULL)
+    {
+        p=p->next;
+    }
+    pnode->next = p->next;
+    p->next = pnode;
+    list->len++;
+    return;
+}
+
 void linklistDel(linklist* list, elemtype data)//按值删除
 {
     if (list == NULL)
