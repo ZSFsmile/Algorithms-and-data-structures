@@ -1,11 +1,10 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include<string.h>
 #include<stdio.h>
 #include<stdlib.h>
 #define MAX 100005
 typedef struct sqstack
 {
-	void* data[MAX];
+	int data[MAX];
 	int size;
 }sqstack;
 
@@ -24,28 +23,25 @@ void sqstackPop(sqstack* stack)//出栈
 		return;
 	if (stack->size <= 0)
 		return;
-	stack->size--;
-	stack->data[stack->size] = NULL;
+    stack->size--;
 	return;
 }
-void sqstackPush(sqstack* stack, void* data)//入栈
+void sqstackPush(sqstack* stack, int data)//入栈
 {
 	if (NULL == stack)
-		return;
-	if (NULL == data)
 		return;
 	stack->data[stack->size] = data;
 	stack->size++;
 	return;
 }
 
-void* sqstackTop(sqstack* stack)//栈顶元素
+int sqstackTop(sqstack* stack)//栈顶元素
 {
 	if (NULL == stack)
 		return NULL;
 	if (stack->size <= 0)
 		return NULL;
-	return stack->data[stack->size - 1];
+	return stack->data[(stack->size) - 1];
 
 }
 
@@ -63,26 +59,31 @@ void sqstackDestory(sqstack* stack)//销毁栈
 	return;
 }
 
-void test03()
+void test()
 {
 	sqstack* stack = sqstackInit();
-	int arr03[10] = { 0 };
-	for (int i = 0; i < 4; ++i)
-	{
-		scanf("%d", &arr03[i]);
-		sqstackPush(stack, &arr03[i]);
-	}
+	printf("按顺序打印入栈元素: ");
+	int x;
+	while (scanf("%d", &x) != EOF)
+    {
+        sqstackPush(stack, x);
+        char ch=getchar();
+        if(ch=='\n')
+            break;
+    }
 	int len = sqstackSize(stack);
+
+	printf("按顺序打印出栈元素: ");
 	for (int i = 0; i < len; ++i)
 	{
-		printf("%d ", *((int*)sqstackTop(stack)));
+		printf("%d ", sqstackTop(stack));
 		sqstackPop(stack);
 	}
 	return;
 }
 
-int main03()
+int main()
 {
-	test03();
+	test();
 	return 0;
 }
