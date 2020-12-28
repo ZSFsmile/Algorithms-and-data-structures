@@ -60,8 +60,8 @@ void BiTreeCreat3(BiNode** root,elemtype data[],int len,int index)
 	 	return;
 	(*root)=BiNodeInit();
 	(*root)->data=data[index];
-	BiTreeCreat(&(*root)->lchild,data,len,index*2);
-	BiTreeCreat(&(*root)->rchild,data,len,index*2+1);
+	BiTreeCreat3(&(*root)->lchild,data,len,index*2);
+	BiTreeCreat3(&(*root)->rchild,data,len,index*2+1);
 	return;
 }
 /*用括号表示法创建二叉树*/
