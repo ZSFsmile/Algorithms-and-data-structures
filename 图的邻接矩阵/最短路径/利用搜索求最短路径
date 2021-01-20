@@ -1,0 +1,99 @@
+#include<bits/stdc++.h>
+using namespace std;
+bool vis1[101];//记录遍历过的点
+bool vis2[101][101];//记录遍历过的边
+int e[101][101];//存储边
+int n;
+int m;//n个点 m条边
+void init()
+{
+    printf("请输入图的点数:");
+    cin>>n;
+    printf("请输入图的边数:");
+    cin>>m;
+    for(int i=1; i<=n; ++i) {
+        for(int j=1; j<=n; ++j){
+            if(i==j)
+                e[i][j]=0;
+            else
+                e[i][j]=-1;
+        }
+    }
+    printf("请输入每条边对应的起点 终点 权值:\n");
+    for(int i=1; i<=m; ++i)
+    {
+        int a,b,c;
+        cin>>a>>b>>c;
+        e[a][b]=c;
+    }
+}
+int mn=9999999;
+void dfs_solve(int cur,int end,int dis)
+{
+    if(dis>mn)
+        return;
+    if(cur==end)
+    {
+        mn=min(mn,dis);
+        return;
+    }
+    for(int i=1; i<=n; ++i)
+    {
+        if(e[cur][i]==-1||cur==i)
+            continue;
+        if(vis1[i]==true)
+            continue;
+        vis1[i]=true;
+        dfs_solve(i,end,dis+e[cur][i]);
+        vis1[i]=false;
+    }
+    return;
+}
+void dfs(int start)
+{
+    vis1[start]=true;
+    dfs_solve(start,5,0);
+    return;
+}
+
+int bfs(int start,int end)
+{
+    int que[10001],dis[10001],head,tail;
+    head=tail=1;
+    que[tail]=start;
+    dis[tail]=0;
+    ++tail;
+    vis1[start]=true;
+    bool flag=false;
+    while(head<tail)
+    {
+        if(tail>n)
+            break;
+        int cur=que[head];
+        for(int i=1; i<=n; ++i)
+        {
+            if(e[cur][i]==-1||cur==i)//满足条件则无边
+                continue;
+            if(vis1[i]==true)//满足条件则此边已经访问
+                continue;
+            vis1[i]=true;
+            que[tail]=i;
+            dis[tail]=dis[head]+e[cur][i];
+            ++tail;
+            if(i==end)
+            {
+                flag=true;
+                break;
+            }
+        }
+        if(true==flag)
+            break;
+        head++;
+    }
+    return dis[tail-1];
+}
+int main()
+{
+   init();
+   
+}
