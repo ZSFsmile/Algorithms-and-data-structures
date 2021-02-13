@@ -17,3 +17,9 @@ void quickSolve(int arr[],int l,int r)//快速排序
     quickSolve(arr,i+1,r);
     return ;
 }
+
+void quickSort(int arr[],int len)
+{
+    quickSolve(arr,0,len-1);
+    return;
+}
