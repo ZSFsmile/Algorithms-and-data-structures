@@ -23,7 +23,7 @@ void primes1(int n)//eratosthenes筛法
             vis[i*j]=1;
     }
 }
-int v[100005];//最小质因子
+int v[100005];//i的最小质因子是v[i] 
 int prime[100005];//存质数
 void primes2(int n)//线性筛法
 {
