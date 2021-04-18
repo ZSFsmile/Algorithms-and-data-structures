@@ -1,0 +1,64 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int N=100010;
+const int M=100010;
+int head[N];
+int n,m,tot=0;
+bool vis[N];
+struct edge{
+    int u,v,w;
+    int next;
+}e[M];
+void addedge(int x,int y,int z)
+{
+    tot++;
+    e[tot].u=x;
+    e[tot].v=y;
+    e[tot].w=z;
+    e[tot].next=head[x];
+    head[x]=tot;
+}
+queue<int>q;
+int d[N];
+void spfa(){
+    memset(d,0x3f,sizeof(d));
+    memset(vis,0,sizeof(vis));
+    d[1]=0;
+    vis[1]=1;
+    q.push(1);
+    while(q.size())
+    {
+        int x=q.front();
+        q.pop();
+        vis[x]=0;
+        for(int i=head[x];i;i=e[i].next)
+        {
+            int y=e[i].u;
+            int z=e[i].w;
+            if(d[y]>d[x]+z)
+            {
+                d[y]=d[x]+z;
+                if(vis[y]==0)
+                {
+                    q.push(y);
+                    vis[y]=1;
+                }
+            }
+        }
+    }
+}
+int main()
+{
+    cin>>n>>m;
+    for(int i=1;i<=m;++i)
+    {
+        int x,y,z;
+        cin>>x>>y>>z;
+        addedge(x,y,z);
+    }
+    spfa();
+    for(int i=1;i<=n;++i)
+        cout<<d[i]<<' ';
+
+    return 0;
+}
