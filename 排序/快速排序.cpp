@@ -1,5 +1,6 @@
 void quickSolve(int arr[],int l,int r)//快速排序
 {
+    //每次选一个基准值，按大于小于基准值 将排序的数分在左右两侧
     if(l>=r)
         return;
     int pivot=arr[r];///基准元素
